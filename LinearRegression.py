@@ -1,4 +1,5 @@
 import numpy as np
+import utils as utils
 
 
 class LinearRegression(object):
@@ -10,10 +11,7 @@ class LinearRegression(object):
         self.test_x = np.genfromtxt('csv/regression/t1_linreg_x_test.csv', delimiter=',')
 
     def gradient_descent(self):
-        # training_errors = []
-        # validation_errors = []
-        # steps = []
-        x = self.prepare_x(self.train_x)
+        x = utils.prepare_x(self.train_x)
 
         train_percent = int(len(x) * 0.7)
         x_train = x[:train_percent]
@@ -26,35 +24,14 @@ class LinearRegression(object):
 
         for step in range(self.count_iterations):
             a = np.dot(x_train, prev_theta)
-
             curr_theta = np.subtract(prev_theta,
                                      self.step_size * np.dot(np.transpose(x_train), np.subtract(a, y_train)))
-
-            # training_error = self.error_calculation(y_train, np.dot(x_train, curr_theta))
-            # validation_error = self.error_calculation(y_validate, np.dot(x_validate, curr_theta))
-
-            # training_errors.append(training_error)
-            # validation_errors.append(validation_error)
-
-            # steps.append(step)
             prev_theta = curr_theta
 
         current_y = np.dot(x_validate, curr_theta)
         print(self.coefficient_of_determination(y_validate, current_y))
 
         return curr_theta
-
-    @staticmethod
-    def prepare_x(x):
-        x_std = x.std(axis=0)
-        x_mean = x.mean(axis=0)
-        x = (x - x_mean) / x_std
-        x = np.concatenate((np.ones(len(x))[:, np.newaxis], x), axis=1)
-        return x
-
-    @staticmethod
-    def error_calculation(current_y, real_y):
-        return (((real_y - current_y) ** 2) / 2).sum() / len(real_y)
 
     @staticmethod
     def coefficient_of_determination(real_y, current_y):

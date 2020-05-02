@@ -1,5 +1,6 @@
 import numpy as np
 import math
+import utils as utils
 
 
 class LogisticRegression(object):
@@ -7,14 +8,11 @@ class LogisticRegression(object):
         self.step_size = step_size
         self.count_iterations = count_iterations
         self.train_x = np.genfromtxt('csv/regression/t1_logreg_x_train.csv', delimiter=',')
-        self.train_y = np.genfromtxt('csv/regression/t1_logreg_x_train.csv', delimiter=',').reshape((-1, 1))
+        self.train_y = np.genfromtxt('csv/regression/t1_logreg_y_train.csv', delimiter=',').reshape((-1, 1))
         self.test_x = np.genfromtxt('csv/regression/t1_logreg_x_test.csv', delimiter=',')
 
     def gradient_descent(self):
-        # training_errors = []
-        # validation_errors = []
-        steps = []
-        x = self.prepare_x(self.train_x)
+        x = utils.prepare_x(self.test_x)
 
         train_percent = int(len(x) * 0.7)
         x_train = x[:train_percent]
@@ -29,26 +27,22 @@ class LogisticRegression(object):
             a = np.zeros((len(x_train), 1))
             for i in range(len(x_train)):
                 a[i] = self.derivative_func(x_train[i], prev_theta)
+
             curr_theta = np.subtract(prev_theta,
                                      self.step_size * np.dot(np.transpose(x_train), np.subtract(a, y_train)))
-
-            # training_error = self.error_calculation(y_train, x_train, curr_theta)
-            # validation_error = self.error_calculation(y_validate, x_validate, curr_theta)
-
-            # training_errors.append(training_error)
-            # validation_errors.append(validation_error)
-            steps.append(step)
             prev_theta = curr_theta
+
+        self.accuracy_calculation(x_validate, y_validate, curr_theta)
 
         return curr_theta
 
-    def error_calculation(self, y, x, theta):
-        error = 0
-        for i in range(len(y)):
-            error += (-y[i] * math.log(self.derivative_func(x[i], theta)))\
-                     - (1 - y[i]) * math.log(1 - self.derivative_func(x[i], theta))
-        error /= len(y)
-        return error
+    def accuracy_calculation(self, x_validate, y_validate, current_theta):
+        accuracy = 0
+        current_y = self.predict(x_validate, current_theta)
+        for v1, v2 in zip(y_validate, current_y):
+            if v1 == v2:
+                accuracy += 1
+        print(accuracy / len(y_validate))
 
     def predict(self, x, theta):
         current_y = np.zeros((len(x), 1), dtype=int)
@@ -62,12 +56,3 @@ class LogisticRegression(object):
     @staticmethod
     def derivative_func(x, theta):
         return 1 / (1 + math.exp(-1 * x.dot(theta)))
-
-    @staticmethod
-    def prepare_x(x):
-        x_std = x.std(axis=0)
-        x_mean = x.mean(axis=0)
-        x = (x - x_mean) / x_std
-        x = np.concatenate((np.ones(len(x))[:, np.newaxis], x), axis=1)
-        return x
-
