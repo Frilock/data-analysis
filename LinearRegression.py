@@ -13,29 +13,28 @@ class LinearRegression(object):
     def gradient_descent(self):
         x = utils.prepare_x(self.train_x)
 
-        train_percent = int(len(x) * 0.7)
+        train_percent = int(len(x) * 0.75)
+        validate_percent = int(len(x) - train_percent)
         x_train = x[:train_percent]
-        x_validate = x[:len(x) - train_percent]
         y_train = self.train_y[:train_percent].reshape((-1, 1))
-        y_validate = self.train_y[:len(x) - train_percent].reshape((-1, 1))
+        x_validate = x[:validate_percent]
+        y_validate = self.train_y[:validate_percent].reshape((-1, 1))
 
         prev_theta = np.random.rand(len(x[0]), 1)
-        curr_theta = np.zeros((len(x[0]), 1))
+        current_theta = 0
 
         for step in range(self.count_iterations):
-            a = np.dot(x_train, prev_theta)
-            curr_theta = np.subtract(prev_theta,
-                                     self.step_size * np.dot(np.transpose(x_train), np.subtract(a, y_train)))
-            prev_theta = curr_theta
-
-        current_y = np.dot(x_validate, curr_theta)
+            temp = np.dot(x_train, prev_theta)
+            current_theta = np.subtract(prev_theta,
+                                        self.step_size * np.dot(np.transpose(x_train), np.subtract(temp, y_train)))
+            prev_theta = current_theta
+        current_y = np.dot(x_validate, current_theta)
         print(self.coefficient_of_determination(y_validate, current_y))
 
-        return curr_theta
+        return current_theta
 
     @staticmethod
     def coefficient_of_determination(real_y, current_y):
         ssr = np.sum((current_y - real_y) ** 2)
         sst = np.sum((real_y - np.mean(real_y)) ** 2)
-        r2_score = 1 - (ssr / sst)
-        return r2_score
+        return 1 - (ssr / sst)
