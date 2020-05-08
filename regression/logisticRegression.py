@@ -8,9 +8,9 @@ class LogisticRegression(object):
         self.step_size = step_size
         self.count_iterations = count_iterations
         self.percent = percent
-        self.train_x = np.genfromtxt('../', delimiter=',')
-        self.train_y = np.genfromtxt('csv/t1_logreg_y_train.csv', delimiter=',').reshape((-1, 1))
-        self.test_x = np.genfromtxt('csv/t1_logreg_x_test.csv', delimiter=',')
+        self.train_x = np.genfromtxt('csv/regression/t1_logreg_x_train.csv', delimiter=',')
+        self.train_y = np.genfromtxt('csv/regression/t1_logreg_y_train.csv', delimiter=',').reshape((-1, 1))
+        self.test_x = np.genfromtxt('csv/regression/t1_logreg_x_test.csv', delimiter=',')
 
     def gradient_descent(self):
         x = utils.prepare_x(self.train_x)
