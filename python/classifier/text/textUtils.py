@@ -42,3 +42,15 @@ def stem_and_lemmatize_word(word_tokens):
     word_tokens = [stemmer.stem(word) for word in word_tokens]  # посмотреть результаты, возможно 1 убрать
     lemmas = [lemmatizer.lemmatize(word, pos='v') for word in word_tokens]
     return lemmas
+
+
+def converter(array):
+    array = [" ".join(i) for i in array]
+    return array
+
+
+def split_array(array):
+    array_split = []
+    for i in array:
+        array_split.append(i.split())
+    return array_split

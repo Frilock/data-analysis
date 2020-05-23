@@ -1,23 +1,10 @@
-# Необходимо научиться классифицировать текстовые запросы пользователей.
-#
-# Текстовые запросы пользователей сгруппированы по файлам.
-# Каждый файл с префиксом train содержит примеры запросы из одного класса.
-# Цифра перед префиксом - метка класса. Файл test.txt содержит тестовые запросы.
-#
-# Провести сравнение различных методов векторизации запросов:
-# 1. n-граммы букв;
-# 2. TF-IDF;
-# 3. усреднение векторов слов.
 import numpy as np
 import pandas as pd
 import python.classifier.text.textUtils as utils
-
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn import metrics
-from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
-from sklearn.cluster import KMeans
 from gensim.models import Word2Vec
 
 
@@ -26,42 +13,64 @@ def main():
     train_y = pd.read_csv('../../../resources/text/train_y.csv', delimiter=',')
     train_x = text_pre_processing('../../../resources/text/train_x.txt')
     test_x = text_pre_processing('../../../resources/text/test.txt')
-    test_x = converter(test_x)
-    train_x = converter(train_x)
 
-    tf_idf_vectoriser = TfidfVectorizer(min_df=10)
-    count_vectoriser = CountVectorizer(min_df=10)
+    tf_idf_vectoriser = TfidfVectorizer(min_df=5)
+    count_vectoriser = CountVectorizer(min_df=5)
+
+    print("Word2Vec vectoriser......")
+    np.savetxt('../../../resources/text/lab4.csv',
+               word_vectoriser(train_x, train_y.values.ravel(), test_x), fmt='%d', delimiter=',')
 
     print("Count vectoriser......")
     abstract_vectoriser(train_x, train_y.values.ravel(), test_x, count_vectoriser)
 
     print("TF-IDF vectoriser......")
-    np.savetxt('../../../resources/text/lab4.csv',
-               abstract_vectoriser(train_x, train_y.values.ravel(), test_x, tf_idf_vectoriser), fmt='%d', delimiter=',')
+    abstract_vectoriser(train_x, train_y.values.ravel(), test_x, tf_idf_vectoriser)
+
+
+def word_vectoriser(tokens_train, train_y, tokens_test):
+    size = 300
+
+    w2v_train = utils.split_array(tokens_train)
+
+    model = Word2Vec(w2v_train, size=size, min_count=5, iter=75)
+
+    dictionary = dict(zip(model.wv.index2word, model.wv.vectors))
+
+    x_for_w2v_train = prepare_w2v(size, dictionary, tokens_train)
+    x_for_w2v_test = prepare_w2v(size, dictionary, tokens_test)
+
+    x_train, x_validate, y_train, y_validate = \
+        train_test_split(x_for_w2v_train, train_y, test_size=0.25, stratify=train_y, random_state=2)
+
+    clf = LogisticRegression(penalty='l2').fit(x_train, y_train)
+    print("Accuracy score logistic regression:",
+          metrics.accuracy_score(y_validate, clf.predict(x_validate)))
+    return clf.predict(x_for_w2v_test)
 
 
 def abstract_vectoriser(train_x, train_y, test_x, vectoriser):
     x_train, x_validate, y_train, y_validate = train_test_split(train_x, train_y,
                                                                 test_size=0.25, stratify=train_y, random_state=2)
-
     x_train_vectoriser = vectoriser.fit_transform(x_train)
     x_validate_vectoriser = vectoriser.transform(x_validate)
 
-    clf = LogisticRegression(penalty='l2')
-    forest_clf = RandomForestClassifier(n_estimators=100)
-    busting_clf = GradientBoostingClassifier()
-
-    clf.fit(x_train_vectoriser, y_train)
-    forest_clf.fit(x_train_vectoriser, y_train)
-    busting_clf.fit(x_train_vectoriser, y_train)
+    clf = LogisticRegression(penalty='l2').fit(x_train_vectoriser, y_train)
 
     print("Accuracy score logistic regression:",
           metrics.accuracy_score(y_validate, clf.predict(x_validate_vectoriser)))
-    print("Accuracy score random forest clf:",
-          metrics.accuracy_score(y_validate, forest_clf.predict(x_validate_vectoriser)))
-    print("Accuracy score busting clf:",
-          metrics.accuracy_score(y_validate, busting_clf.predict(x_validate_vectoriser)))
     return clf.predict(vectoriser.transform(test_x))
+
+
+def prepare_w2v(size, dictionary, tokens):
+    x_for_w2v = []
+    for token in tokens:
+        x_vector = np.zeros(size)
+        for word in token.split():
+            if word in dictionary:
+                x_vector += dictionary[word]
+        x_for_w2v.append(x_vector / len(token.split()))
+    return x_for_w2v
 
 
 def create_x_and_y_train():
@@ -109,12 +118,7 @@ def text_pre_processing(file_name):
         line = utils.remove_stopwords(line)  # удаление стоп-слов
         line = utils.stem_and_lemmatize_word(line)  # получение корневой формы слова и лематизация
         result_text.append(line)
-    return result_text
-
-
-def converter(array):
-    array = [" ".join(i) for i in array]
-    return array
+    return utils.converter(result_text)
 
 
 def read_file(file_name):
@@ -135,4 +139,3 @@ def filling(size, number):
 
 
 main()
-
