@@ -22,7 +22,7 @@ __all__ = ['CountVectorizer',
 
 
 def _analyze(doc, analyzer=None, tokenizer=None, ngrams=None, decoder=None):
-    print("_analyze")
+    ##print("_analyze")
     """Chain together an optional series of text processing steps to go from
     a single document to ngrams, with or without tokenizing.
     If analyzer is used, only the decoder argument is used, as the analyzer is
@@ -54,7 +54,7 @@ def _analyze(doc, analyzer=None, tokenizer=None, ngrams=None, decoder=None):
 
 
 def strip_accents_unicode(s):
-    print("strip_accents_unicode")
+    ##print("strip_accents_unicode")
     """Transform accentuated unicode symbols into their simple counterpart
     Warning: the python-level loop and join operations make this
     implementation 20 times slower than the strip_accents_ascii basic
@@ -81,7 +81,7 @@ class _VectorizerMixin:
     _white_spaces = re.compile(r"\s\s+")
 
     def decode(self, doc):
-        print("decode")
+        #print("decode")
         """Decode the input into a string of unicode symbols.
         The decoding strategy depends on the vectorizer parameters.
         Parameters
@@ -110,7 +110,7 @@ class _VectorizerMixin:
         return doc
 
     def _word_ngrams(self, tokens):
-        print("_word_ngrams")
+        #print("_word_ngrams")
         """Turn tokens into a sequence of n-grams after stop words filtering"""
         # handle token n-grams
         min_n, max_n = self.ngram_range
@@ -138,7 +138,7 @@ class _VectorizerMixin:
         return tokens
 
     def build_tokenizer(self):
-        print("build_tokenizer")
+        #print("build_tokenizer")
         """Return a function that splits a string into a sequence of tokens.
         Returns
         -------
@@ -151,7 +151,7 @@ class _VectorizerMixin:
         return token_pattern.findall
 
     def build_analyzer(self):
-        print("build_analyzer")
+        #print("build_analyzer")
         """Return a callable that handles tokenization
         and n-grams generation.
         Returns
@@ -177,7 +177,7 @@ class _VectorizerMixin:
                              self.analyzer)
 
     def _validate_vocabulary(self):
-        print("_validate_vocabulary")
+        #print("_validate_vocabulary")
         vocabulary = self.vocabulary
         if vocabulary is not None:
             if isinstance(vocabulary, set):
@@ -206,7 +206,7 @@ class _VectorizerMixin:
             self.fixed_vocabulary_ = False
 
     def _check_vocabulary(self):
-        print("_check_vocabulary")
+        #print("_check_vocabulary")
         """Check if vocabulary is empty or missing (not fitted)"""
         if not hasattr(self, 'vocabulary_'):
             self._validate_vocabulary()
@@ -217,7 +217,7 @@ class _VectorizerMixin:
             raise ValueError("Vocabulary is empty")
 
     def _validate_params(self):
-        print("_validate_params")
+        #print("_validate_params")
         """Check validity of ngram_range parameter"""
         min_n, max_m = self.ngram_range
         if min_n > max_m:
@@ -395,7 +395,7 @@ class CountVectorizer(_VectorizerMixin, BaseEstimator):
         self.dtype = dtype
 
     def _sort_features(self, X, vocabulary):
-        print("_sort_features")
+        #print("_sort_features")
         """Sort features by name
         Returns a reordered matrix and modifies the vocabulary in place
         """
@@ -409,7 +409,7 @@ class CountVectorizer(_VectorizerMixin, BaseEstimator):
         return X
 
     def _count_vocab(self, raw_documents, fixed_vocab):
-        print("_count_vocab")
+        #print("_count_vocab")
         """Create sparse feature matrix, and vocabulary where fixed_vocab=False
         """
         if fixed_vocab:
@@ -470,7 +470,7 @@ class CountVectorizer(_VectorizerMixin, BaseEstimator):
         return vocabulary, X
 
     def fit_transform(self, raw_documents, y=None):
-        print("fit_transform")
+        #print("fit_transform")
         """Learn the vocabulary dictionary and return document-term matrix.
         This is equivalent to fit followed by transform, but more efficiently
         implemented.
@@ -518,7 +518,7 @@ class CountVectorizer(_VectorizerMixin, BaseEstimator):
         return X
 
     def get_feature_names(self):
-        print("get_feature_names")
+        #print("get_feature_names")
         """Array mapping from feature integer indices to feature name.
         Returns
         -------
@@ -532,11 +532,11 @@ class CountVectorizer(_VectorizerMixin, BaseEstimator):
                                      key=itemgetter(1))]
 
     def _more_tags(self):
-        print("_more_tags")
+        #print("_more_tags")
         return {'X_types': ['string']}
 
 
 def _make_int_array():
-    print("_make_int_array")
+    #print("_make_int_array")
     """Construct an array.array of a type suitable for scipy.sparse indices."""
     return array.array(str("i"))

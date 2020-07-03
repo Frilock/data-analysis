@@ -1,4 +1,4 @@
-from Vectorizer import CountVectorizer
+from vectorizer import CountVectorizer
 import string
 import re
 import inflect
@@ -10,7 +10,7 @@ import nltk
 nltk.download('stopwords')
 nltk.download('punkt')
 nltk.download('wordnet')
-class TM():
+class TextMining():
     #текст, разбитый на предложения
 
     def __init__(self):
@@ -91,9 +91,9 @@ class TM():
         file = open(file_path, 'r', encoding=encoding)
         return file.read()
 
-    def textAnalyze(self,file_path):
+    def textAnalyzer(self,file_path):
         text = self.pre_processing(file_path, 'utf-8')
         vect = CountVectorizer(ngram_range=(2, 3), analyzer='word')
-        a = vect.fit_transform(text)
-        return a
+        result = vect.fit_transform(text)
+        return result
 
