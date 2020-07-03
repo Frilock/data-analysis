@@ -2,6 +2,7 @@ from Vectorizer import CountVectorizer
 import string
 import re
 import inflect
+import pandas as pd
 from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
 from nltk.tokenize import word_tokenize
@@ -91,9 +92,17 @@ class TM():
         file = open(file_path, 'r', encoding=encoding)
         return file.read()
 
-    def textAnalyze(self,file_path):
-        text = self.pre_processing(file_path, 'utf-8')
+    def textAnalyze(self, file_path):
+        #data = self.pre_processing(file_path, 'utf-8')
+        ###загулшка препроцессора, чтобы не менял размер массива
+        data_0 = pd.read_csv(file_path, delimiter="\t", header=None)
+        data_0 = data_0.values
+        data = []
+        i = 0
+        while i in range(data_0.size):
+            data.append(str(data_0[i]))
+            i += 1
+        ### Конец заглушки
         vect = CountVectorizer(ngram_range=(2, 3), analyzer='word')
-        a = vect.fit_transform(text)
+        a = vect.fit_transform(data)
         return a
-
