@@ -1,5 +1,4 @@
-import pandas as pd
-from textMining import TextMining
+from core.first.textMining import TextMining
 
 
 tm = TextMining()

@@ -1,5 +1,5 @@
 import pandas as pd
-from ontoClassifier import OntoClassifier
+from core.second.ontoClassifier import OntoClassifier
 
 
 data_y = pd.read_csv('y_train.txt', delimiter="\t", header=None)

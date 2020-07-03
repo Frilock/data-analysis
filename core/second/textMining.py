@@ -1,4 +1,4 @@
-from vectorizer import CountVectorizer
+from core.second.vectorizer import CountVectorizer
 import string
 import re
 import inflect

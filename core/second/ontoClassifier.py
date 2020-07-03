@@ -1,6 +1,5 @@
-import numpy as np
-from textMining import TextMining
-from randomForestClassifier import RandomForestClassifier
+from core.second.textMining import TextMining
+from core.second.randomForestClassifier import RandomForestClassifier
 from sklearn.feature_extraction.text import TfidfTransformer
 
 
