@@ -332,6 +332,20 @@ class CountVectorizer(_VectorizerMixin, BaseEstimator):
 
         return X
 
+    def transform(self, raw_documents):
+
+        if isinstance(raw_documents, str):
+            raise ValueError(
+                "Iterable over raw text documents expected, "
+                "string object received.")
+        self._check_vocabulary()
+
+        # use the same matrix-building strategy as fit_transform
+        _, X = self._count_vocab(raw_documents, fixed_vocab=True)
+        if self.binary:
+            X.data.fill(1)
+        return X
+
     def get_feature_names(self):
 
         self._check_vocabulary()

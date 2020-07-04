@@ -1,4 +1,4 @@
-from core.first.vectorizer import CountVectorizer
+from core.second.vectorizer import CountVectorizer
 import string
 import re
 import inflect
@@ -6,8 +6,8 @@ from nltk.corpus import stopwords
 from nltk.stem.snowball import SnowballStemmer
 from nltk.tokenize import word_tokenize
 import nltk
-nltk.download('stopwords')
-nltk.download('punkt')
+#nltk.download('stopwords')
+#nltk.download('punkt')
 class TextMining():
     def __init__(self):
         """
@@ -16,6 +16,7 @@ class TextMining():
         """
         self.engine = inflect.engine()
         self.stemmer = SnowballStemmer("russian")
+        self.vect = CountVectorizer(ngram_range=(2, 3), analyzer='word')
 
     def pre_processing(self, file_path, encoding):
         text = self.open_file(file_path, encoding)
@@ -82,7 +83,10 @@ class TextMining():
 
     def textAnalyzer(self,file_path):
         text = self.pre_processing(file_path, 'utf-8')
-        vect = CountVectorizer(ngram_range=(2, 3), analyzer='word')
-        result = vect.fit_transform(text)
+        result = self.vect.fit_transform(text)
         return result
 
+    def transform(self,file_path):
+        text = self.pre_processing(file_path, 'utf-8')
+        result = self.vect.transform(text)
+        return result

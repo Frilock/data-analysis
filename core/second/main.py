@@ -14,5 +14,5 @@ while i in range(data_y.size):
 
 oc = OntoClassifier()
 oc.fit("0_train.txt", label)
-res = oc.predict("0_train.txt")
+res = oc.predict("test_x.txt")
 print(oc.getOnto())

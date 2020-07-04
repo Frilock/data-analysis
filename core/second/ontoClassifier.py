@@ -14,7 +14,7 @@ class OntoClassifier():
         self.tf_idf = TfidfTransformer()
         self.RFC = RandomForestClassifier()
         self.res = []
-        self.names = ["class0", "class1", "class2"]
+        self.names = ["Coding Theory", "Astronomy", "Biology"]
         self.ontoRes = []
 
     def fit(self, file_path, y):
@@ -28,7 +28,6 @@ class OntoClassifier():
         """
 
         b = self.tm.textAnalyzer(file_path)
-        print(b.toarray())
         c = self.tf_idf.fit_transform(b)
         self.RFC.fit(c, y)
 
@@ -39,9 +38,8 @@ class OntoClassifier():
             x : array-like
                 data to classification.
         """
-        b = self.tm.textAnalyzer(file_path)
-        print(b.toarray())
-        c = self.tf_idf.fit_transform(b)
+        b = self.tm.transform(file_path)
+        c = self.tf_idf.transform(b)
         self.res = self.RFC.predict(c)
         return self.res
 
