@@ -1,4 +1,5 @@
 from core.first.textMining import TextMining
+from nltk.stem.snowball import SnowballStemmer
 
 
 tm = TextMining()

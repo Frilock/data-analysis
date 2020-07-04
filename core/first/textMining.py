@@ -3,13 +3,11 @@ import string
 import re
 import inflect
 from nltk.corpus import stopwords
-from nltk.stem.porter import PorterStemmer
+from nltk.stem.snowball import SnowballStemmer
 from nltk.tokenize import word_tokenize
-from nltk.stem import WordNetLemmatizer
 import nltk
 nltk.download('stopwords')
 nltk.download('punkt')
-nltk.download('wordnet')
 class TextMining():
     #текст, разбитый на предложения
 
@@ -17,15 +15,9 @@ class TextMining():
         """
             Parameters
                 ----------
-            X : array-like
-                Feature dataset.
-            y : array-like
-                Target values. By default is required, but if y_required = false
-                then may be omitted.
         """
         self.engine = inflect.engine()
-        self.stemmer = PorterStemmer()  # замена на русский стеммер
-        self.lemmatizer = WordNetLemmatizer()  # замена на русский лематайзер
+        self.stemmer = SnowballStemmer("russian") # замена на русский стеммер
 
     def pre_processing(self, file_path, encoding):
         text = self.open_file(file_path, encoding)
@@ -71,14 +63,13 @@ class TextMining():
         return " ".join(text.split())
 
     def remove_stopwords(self, text):
-        stop_words = stopwords.words('english')
-        word_tokens = word_tokenize(text)
+        stop_words = stopwords.words('russian')
+        word_tokens = word_tokenize(text, language="russian")
         filtered_text = [word for word in word_tokens if word not in stop_words]
         return filtered_text
 
     def stem_and_lemmatize_word(self, text):
         word_tokens = [self.stemmer.stem(word) for word in text]  # посмотреть результаты, возможно 1 убрать
-        word_tokens = [self.lemmatizer.lemmatize(word, pos='v') for word in word_tokens]
         return word_tokens
 
     def split_array(self, array):
