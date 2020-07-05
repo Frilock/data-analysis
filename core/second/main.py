@@ -4,7 +4,6 @@ from core.second.ontoClassifier import OntoClassifier
 
 data_y = pd.read_csv('y_train.txt', delimiter="\t", header=None)
 data_y = data_y.values
-
 label = []
 
 i = 0
