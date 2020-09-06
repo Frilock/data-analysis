@@ -8,7 +8,6 @@ class OntoClassifier():
         """
             Parameters
              ----------
-
         """
         self.tm = TextMining()
         self.tf_idf = TfidfTransformer()
@@ -49,7 +48,7 @@ class OntoClassifier():
             k = 0
             print(self.res[i])
             for j in self.res[i]:
-                if bool(j == '1')&(self.names[k] not in self.ontoRes):
+                if bool(j == '1') & (self.names[k] not in self.ontoRes):
                     self.ontoRes.append(self.names[k])
                 if bool(j == '0') | bool(j == '1'):
                     k = k + 1

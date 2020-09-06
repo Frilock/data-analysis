@@ -8,16 +8,16 @@ from nltk.tokenize import word_tokenize
 import nltk
 nltk.download('stopwords')
 nltk.download('punkt')
-class TextMining():
-    #текст, разбитый на предложения
 
-    def __init__(self):
+
+class TextMining(object):
+    def __init__(self):  #  текст, разбитый на предложения
         """
             Parameters
                 ----------
         """
         self.engine = inflect.engine()
-        self.stemmer = SnowballStemmer("russian") # замена на русский стеммер
+        self.stemmer = SnowballStemmer("russian")  # замена на русский стеммер
 
     def pre_processing(self, file_path, encoding):
         text = self.open_file(file_path, encoding)

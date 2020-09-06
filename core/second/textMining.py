@@ -8,7 +8,9 @@ from nltk.tokenize import word_tokenize
 import nltk
 #nltk.download('stopwords')
 #nltk.download('punkt')
-class TextMining():
+
+
+class TextMining(object):
     def __init__(self):
         """
             Parameters n
@@ -86,7 +88,7 @@ class TextMining():
         result = self.vect.fit_transform(text)
         return result
 
-    def transform(self,file_path):
+    def transform(self, file_path):
         text = self.pre_processing(file_path, 'utf-8')
         result = self.vect.transform(text)
         return result
