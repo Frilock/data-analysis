@@ -8,7 +8,6 @@ from sklearn.model_selection import train_test_split
 
 
 def read_sample(file_name):
-
     data_frame = pd.read_csv(file_name, delimiter=',')
     return data_frame
 
