@@ -3,7 +3,7 @@ from core.second.randomForestClassifier import RandomForestClassifier
 from sklearn.feature_extraction.text import TfidfTransformer
 
 
-class OntoClassifier():
+class OntoClassifier:
     def __init__(self):
         """
             Parameters
@@ -25,8 +25,7 @@ class OntoClassifier():
             y : array-like
                 Target values.
         """
-
-        b = self.tm.textAnalyzer(file_path)
+        b = self.tm.fit_transform(file_path)
         c = self.tf_idf.fit_transform(b)
         self.RFC.fit(c, y)
 

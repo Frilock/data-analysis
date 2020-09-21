@@ -6,8 +6,8 @@ from nltk.corpus import stopwords
 from nltk.stem.snowball import SnowballStemmer
 from nltk.tokenize import word_tokenize
 import nltk
-#nltk.download('stopwords')
-#nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('punkt')
 
 
 class TextMining(object):
@@ -34,7 +34,8 @@ class TextMining(object):
             result_text.append(suggestion)
         return self.converter(result_text)
 
-    def split_text_in_sentences(self, text):
+    @staticmethod
+    def split_text_in_sentences(text):
         # Проблема в том, что точка часто не явл. разделителем предложения.
         # И (иногда!) восклицательный знак тоже.
         # Обязательно надо проверять регистр буквы после точки.
@@ -42,7 +43,8 @@ class TextMining(object):
         text_in_sentences.remove(text_in_sentences[-1])  # удаление последнего пустого предложения
         return text_in_sentences
 
-    def converter(self, text):
+    @staticmethod
+    def converter(text):
         text = [" ".join(i) for i in text]
         return text
 
@@ -58,12 +60,14 @@ class TextMining(object):
         temp_str = ' '.join(new_string)
         return temp_str
 
-    def remove_punctuation(self, text):
+    @staticmethod
+    def remove_punctuation(text):
         translator = str.maketrans('', '', string.punctuation)
         text = text.translate(translator)
         return " ".join(text.split())
 
-    def remove_stopwords(self, text):
+    @staticmethod
+    def remove_stopwords(text):
         stop_words = stopwords.words('russian')
         word_tokens = word_tokenize(text, language="russian")
         filtered_text = [word for word in word_tokens if word not in stop_words]
@@ -73,17 +77,19 @@ class TextMining(object):
         word_tokens = [self.stemmer.stem(word) for word in text]
         return word_tokens
 
-    def split_array(self, array):
+    @staticmethod
+    def split_array(array):
         array_split = []
         for i in array:
             array_split.append(i.split())
         return array_split
 
-    def open_file(self, file_path, encoding):
+    @staticmethod
+    def open_file(file_path, encoding):
         file = open(file_path, 'r', encoding=encoding)
         return file.read()
 
-    def textAnalyzer(self,file_path):
+    def fit_transform(self, file_path):
         text = self.pre_processing(file_path, 'utf-8')
         result = self.vect.fit_transform(text)
         return result

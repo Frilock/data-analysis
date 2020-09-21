@@ -11,7 +11,7 @@ nltk.download('punkt')
 
 
 class TextMining(object):
-    def __init__(self):  #  текст, разбитый на предложения
+    def __init__(self):  # текст, разбитый на предложения
         """
             Parameters
                 ----------
@@ -33,15 +33,14 @@ class TextMining(object):
             result_text.append(suggestion)
         return self.converter(result_text)
 
-    def split_text_in_sentences(self, text):
-        # Проблема в том, что точка часто не явл. разделителем предложения.
-        # И (иногда!) восклицательный знак тоже.
-        # Обязательно надо проверять регистр буквы после точки.
+    @staticmethod
+    def split_text_in_sentences(text):
         text_in_sentences = re.split(r'(?<=[.!?…])', text)
         text_in_sentences.remove(text_in_sentences[-1])  # удаление последнего пустого предложения
         return text_in_sentences
 
-    def converter(self, text):
+    @staticmethod
+    def converter(text):
         text = [" ".join(i) for i in text]
         return text
 
@@ -57,12 +56,14 @@ class TextMining(object):
         temp_str = ' '.join(new_string)
         return temp_str
 
-    def remove_punctuation(self, text):
+    @staticmethod
+    def remove_punctuation(text):
         translator = str.maketrans('', '', string.punctuation)
         text = text.translate(translator)
         return " ".join(text.split())
 
-    def remove_stopwords(self, text):
+    @staticmethod
+    def remove_stopwords(text):
         stop_words = stopwords.words('russian')
         word_tokens = word_tokenize(text, language="russian")
         filtered_text = [word for word in word_tokens if word not in stop_words]
@@ -72,17 +73,19 @@ class TextMining(object):
         word_tokens = [self.stemmer.stem(word) for word in text]  # посмотреть результаты, возможно 1 убрать
         return word_tokens
 
-    def split_array(self, array):
+    @staticmethod
+    def split_array(array):
         array_split = []
         for i in array:
             array_split.append(i.split())
         return array_split
 
-    def open_file(self, file_path, encoding):
+    @staticmethod
+    def open_file(file_path, encoding):
         file = open(file_path, 'r', encoding=encoding)
         return file.read()
 
-    def textAnalyzer(self,file_path):
+    def fit_transform(self, file_path):
         text = self.pre_processing(file_path, 'utf-8')
         vect = CountVectorizer(ngram_range=(2, 3), analyzer='word')
         result = vect.fit_transform(text)
